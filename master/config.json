@@ -1,0 +1,1 @@
+{"role": "API gateway", "scenarios": ["import", "search", "train", "recommend"]}

@@ -1,0 +1,26 @@
+services:
+  collector:
+    build: {context: ., dockerfile: Dockerfile.collector}
+    volumes: [collector_logs:/data]
+  storage:
+    build: {context: ., dockerfile: Dockerfile.storage}
+    volumes: [storage_data:/data]
+  ml:
+    build: {context: ., dockerfile: Dockerfile.ml}
+    volumes: [model_data:/data]
+  master:
+    build: {context: ., dockerfile: Dockerfile.master}
+    depends_on: [collector, storage, ml]
+    ports: ["8000:8000"]
+    environment:
+      COLLECTOR_URL: http://collector:8000
+      STORAGE_URL: http://storage:8000
+      ML_URL: http://ml:8000
+  visualization:
+    build: {context: ., dockerfile: Dockerfile.visualization}
+    depends_on: [master]
+    ports: ["8080:8000"]
+volumes:
+  collector_logs:
+  storage_data:
+  model_data:
